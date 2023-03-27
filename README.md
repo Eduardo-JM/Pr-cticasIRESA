@@ -1,1 +1,1 @@
-# Pr-cticasIRESA
+# PracticasIRESA
