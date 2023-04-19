@@ -35,7 +35,7 @@ typedef struct LCDDisplay {
 } LCDDisplay;
 
 typedef struct RunMethods {
-  bool voltage = false;
+  bool voltage = true;
   bool current = false;
   bool power = false;
   bool frequency = false;
@@ -75,7 +75,7 @@ void setup() {
   lcd.begin(LCD_COLUMNS, LCD_ROWS);
   lcd.clear();
 
-  phases = SINGLE_PHASE;
+  phases = BIPHASIC;
   CurrentType currentType = DC;
 
   runMethods.frequency = runMethods.frequency && currentType != DC;
@@ -101,7 +101,6 @@ void setup() {
 }
 
 void loop() {
-
   while (inputPins->previous != NULL) {
     inputPins = inputPins->previous;
   }
@@ -112,8 +111,14 @@ void loop() {
     if (runMethods.voltage){
       text += String(getVoltage(inputPins->voltage_pin), 2) + " V; ";
     }
-    
-    delay(5000);
+    lcd.setCursor(0,1);
+    lcd.print(text);
+    if (inputPins->next == NULL) {
+      break;
+    }
+    inputPins = inputPins->next;
+    delay(2000);
+    lcd.clear();
   }
 }
 
