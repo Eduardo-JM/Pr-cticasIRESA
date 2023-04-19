@@ -51,9 +51,6 @@ typedef struct InputPins {
   struct InputPins* previous = NULL;
 } InputPins;
 
-InputPins* head = NULL;
-InputPins* cursor = NULL;
-
 /* RPM variables */
 ull time_start = 0L;
 ull time_end = 0L;
@@ -65,6 +62,10 @@ float getRPM();
 float getTorque();
 //String formatFloatingPointNumber(float);
 
+Phases phases;
+RunMethods runMethods;
+InputPins* inputPins = NULL;
+
 void setup() {
   pinMode(D7, INPUT);
   pinMode(7, INPUT);
@@ -74,10 +75,8 @@ void setup() {
   lcd.begin(LCD_COLUMNS, LCD_ROWS);
   lcd.clear();
 
-  Phases phases = SINGLE_PHASE;
+  phases = SINGLE_PHASE;
   CurrentType currentType = DC;
-
-  RunMethods runMethods;
 
   runMethods.frequency = runMethods.frequency && currentType != DC;
   runMethods.power = runMethods.power && (runMethods.current && runMethods.voltage);
@@ -85,22 +84,36 @@ void setup() {
 
   int current_analog_pin = A0;
   int current_digital_pin = 8;
-  
-  head = (InputPins* ) calloc(1, sizeof(InputPins));
-  cursor = head;
 
-  for (unsigned int i = 0; i < phases; ++i) {
-    cursor->voltage_pin = current_analog_pin++;
-    cursor->current_pin = current_analog_pin++;
-    cursor->frequency_pin = current_digital_pin++;
+  inputPins = (InputPins* ) calloc(1, sizeof(InputPins));
+
+  for (unsigned int i = 0; i < phases;) {
+    inputPins->voltage_pin = current_analog_pin++;
+    inputPins->current_pin = current_analog_pin++;
+    inputPins->frequency_pin = current_digital_pin++;
+    if (++i < phases) {
+      inputPins->next = (InputPins* ) calloc(1, sizeof(InputPins));
+      inputPins->next->previous = inputPins;
+      inputPins = inputPins->next;
+    }
   }
   
 }
 
 void loop() {
 
+  while (inputPins->previous != NULL) {
+    inputPins = inputPins->previous;
+  }
+
   for (unsigned int i = 0; i < phases; ++i) {
     lcd.print("Midiendo fase: " + String(i));
+    String text = "";
+    if (runMethods.voltage){
+      text += String(getVoltage(inputPins->voltage_pin), 2) + " V; ";
+    }
+    
+    delay(5000);
   }
 }
 
