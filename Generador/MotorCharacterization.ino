@@ -1,16 +1,11 @@
-/* RPM constanst */
-// MAX 4294967295
-#define RPM_SAMPLES 250000
-#define RPM_INPUT_PIN 7
-#define INTERUPTS_PER_REVOLUTION 4.0
-
 /* Torque variables */
 float voltage = 0.f;
 float current = 0.f;
 float rpm = 0.f;
 
 /**
- * This method 
+ * This method reads and counts how many times
+ * the 
 */
 float getRPM(){
   ull counter = 0L;
@@ -23,8 +18,8 @@ float getRPM(){
      }
   }
   time_end = micros();
-  counter>>1;
-  rpm = ((double) (counter * 60000000.0)) / (INTERUPTS_PER_REVOLUTION * (time_end - time_start));
+  counter = counter >> 1;
+  rpm = ((double) (counter * MILLI_SECONDS_IN_ONE_MINUTE)) / (INTERUPTS_PER_REVOLUTION * (time_end - time_start));
   return rpm;
 }
 

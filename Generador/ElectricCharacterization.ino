@@ -6,8 +6,6 @@
 #define ACS_VOLTAGE_AT_NO_CHARGE 2.49965f
 #define ACS_SENSIVITY 0.100f
 
-#define FREQUENCY_SAMPLES 100000
-
 /**
  * This method read {@code VOLTAGE_SAMPLES} samples
  * of the specified pin
