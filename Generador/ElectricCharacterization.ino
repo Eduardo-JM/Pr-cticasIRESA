@@ -45,12 +45,12 @@ float getFrequency(int input_pin){
   time_start = micros();
   high_state = digitalRead(input_pin) == HIGH;
   for (ull i = 0; i < FREQUENCY_SAMPLES; ++i) {
-     if ( (digitalRead(RPM_INPUT_PIN) == HIGH) != high_state ){
+     if ( (digitalRead(FREQUENCY_INPUT_PIN) == HIGH) != high_state ){
        high_state = !high_state;
        ++counter;
      }
   }
   time_end = micros();
   counter>>1;
-  return ((double) (counter * 60000000.0)) / (time_end - time_start);
+  return ((double) (counter * 1000000.0)) / (time_end - time_start);
 }

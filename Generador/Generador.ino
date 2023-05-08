@@ -16,7 +16,7 @@
 
 /* RPM constants */
 #define RPM_INPUT_PIN 8 // MAX 4294967295
-#define RPM_SAMPLES 125000
+#define RPM_SAMPLES 250000
 #define INTERUPTS_PER_REVOLUTION 1.0
 #define MILLI_SECONDS_IN_ONE_MINUTE 60000000
 
@@ -100,7 +100,7 @@ void loop() {
     event = event_before;
   
   switch (event){
-    case '1':
+    case '3':
       lcd.clear();
       lcd.print("Leyendo pin " + String(FREQUENCY_INPUT_PIN));
       lcd.setCursor(0,1);
@@ -133,5 +133,5 @@ void printMenu() {
   lcd.clear();
   lcd.print("Selecciona:");
   lcd.setCursor(0,1);
-  lcd.print("1: freq; 2 rpm;");
+  lcd.print("3: freq; 2 rpm;");
 }
